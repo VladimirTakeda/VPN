@@ -1,0 +1,175 @@
+{
+  "dns" : {
+    "disableCache" : false,
+    "queryStrategy" : "UseIPv4",
+    "servers" : [
+      "https:\/\/8.8.8.8\/dns-query",
+      "https:\/\/1.1.1.1\/dns-query"
+    ]
+  },
+  "fakedns" : [
+    {
+      "ipPool" : "198.20.0.0\/15",
+      "poolSize" : 128
+    },
+    {
+      "ipPool" : "fc00::\/64",
+      "poolSize" : 128
+    }
+  ],
+  "inbounds" : [
+    {
+      "listen" : "127.0.0.1",
+      "port" : 1080,
+      "protocol" : "socks",
+      "settings" : {
+        "auth" : "noauth",
+        "udp" : true
+      },
+      "sniffing" : {
+        "destOverride" : [
+          "http",
+          "tls",
+          "quic"
+        ],
+        "enabled" : true,
+        "routeOnly" : true
+      },
+      "tag" : "socks"
+    }
+  ],
+  "log" : {
+    "access" : "",
+    "error" : "",
+    "loglevel" : "info"
+  },
+  "observatory" : {
+    "enableConcurrency" : true,
+    "probeInterval" : "5s",
+    "probeURL" : "https:\/\/www.google.com\/generate_204",
+    "subjectSelector" : [
+      "primary1",
+      "primary2"
+    ]
+  },
+  "outbounds" : [
+    {
+      "protocol" : "vless",
+      "settings" : {
+        "vnext" : [
+          {
+            "address" : "141.94.204.144",
+            "port" : 8443,
+            "users" : [
+              {
+                "encryption" : "none",
+                "id" : "bc6103f7-d5f3-47a9-9044-c819eae99fe2"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings" : {
+        "network" : "tcp",
+        "realitySettings" : {
+          "publicKey" : "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
+          "serverName" : "discordapp.com",
+          "shortId" : "6ba85179e30d4fc2",
+          "spiderX" : "\/"
+        },
+        "security" : "reality"
+      },
+      "tag" : "primary1"
+    },
+    {
+      "protocol" : "vless",
+      "settings" : {
+        "vnext" : [
+          {
+            "address" : "141.94.204.143",
+            "port" : 8443,
+            "users" : [
+              {
+                "encryption" : "none",
+                "id" : "7fa03a24-9456-4b71-9024-53425779823d"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings" : {
+        "network" : "tcp",
+        "realitySettings" : {
+          "publicKey" : "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
+          "serverName" : "discordapp.com",
+          "shortId" : "6ba85179e30d4fc2",
+          "spiderX" : "\/"
+        },
+        "security" : "reality"
+      },
+      "tag" : "primary2"
+    },
+    {
+      "protocol" : "freedom",
+      "settings" : {
+
+      },
+      "tag" : "direct"
+    },
+    {
+      "protocol" : "blackhole",
+      "settings" : {
+
+      },
+      "tag" : "block"
+    }
+  ],
+  "routing" : {
+    "balancers" : [
+      {
+        "selector" : [
+          "primary1",
+          "primary2"
+        ],
+        "strategy" : {
+          "type" : "leastPing"
+        },
+        "tag" : "proxy-balancer"
+      }
+    ],
+    "domainStrategy" : "IPIfNonMatch",
+    "rules" : [
+      {
+        "domain" : [
+          "domain:ru",
+          "geosite:category-ru"
+        ],
+        "outboundTag" : "direct",
+        "type" : "field"
+      },
+      {
+        "ip" : [
+          "geoip:ru"
+        ],
+        "outboundTag" : "direct",
+        "type" : "field"
+      },
+      {
+        "domain" : [
+          "geosite:category-ads",
+          "geosite:google-ads"
+        ],
+        "outboundTag" : "block",
+        "type" : "field"
+      },
+      {
+        "balancerTag" : "proxy-balancer",
+        "ip" : [
+          "0.0.0.0\/0",
+          "::\/0"
+        ],
+        "type" : "field"
+      }
+    ]
+  }
+}
