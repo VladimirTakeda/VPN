@@ -157,6 +157,7 @@
     "probeInterval": "5s",
     "enableConcurrency": true,
     "subjectSelector": ["primary1", "primary2"]
-  }
+  },
+  "remarks": "🇫🇮 CCCP - Finland"
 }
 ]
