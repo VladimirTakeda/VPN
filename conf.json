@@ -1,178 +1,162 @@
 [
 {
-  "dns" : {
-    "disableCache" : false,
-    "queryStrategy" : "UseIPv4",
-    "servers" : [
-      "https:\/\/8.8.8.8\/dns-query",
-      "https:\/\/1.1.1.1\/dns-query"
-    ]
+  "log": {
+    "loglevel": "info",
+    "access": "",
+    "error": ""
   },
-  "fakedns" : [
+  "dns": {
+    "servers": [
+      "https://8.8.8.8/dns-query",
+      "https://1.1.1.1/dns-query"
+    ],
+    "queryStrategy": "UseIPv4",
+    "disableCache": false
+  },
+  "inbounds": [
     {
-      "ipPool" : "198.20.0.0\/15",
-      "poolSize" : 128
+      "tag": "socks",
+      "port": 10808,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": false,
+        "destOverride": ["http", "tls", "fakedns"]
+      },
+      "settings": {
+        "auth": "noauth",
+        "udp": true
+      }
     },
     {
-      "ipPool" : "fc00::\/64",
-      "poolSize" : 128
+      "tag": "http",
+      "port": 10809,
+      "listen": "0.0.0.0",
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "routeOnly": false,
+        "destOverride": ["http", "tls", "fakedns"]
+      },
+      "settings": {
+        "auth": "noauth"
+      }
     }
   ],
-  "inbounds" : [
+  "outbounds": [
     {
-      "listen" : "127.0.0.1",
-      "port" : 1080,
-      "protocol" : "socks",
-      "settings" : {
-        "auth" : "noauth",
-        "udp" : true
-      },
-      "sniffing" : {
-        "destOverride" : [
-          "http",
-          "tls",
-          "quic"
-        ],
-        "enabled" : true,
-        "routeOnly" : true
-      },
-      "tag" : "socks"
-    }
-  ],
-  "log" : {
-    "access" : "",
-    "error" : "",
-    "loglevel" : "info"
-  },
-  "observatory" : {
-    "enableConcurrency" : true,
-    "probeInterval" : "5s",
-    "probeURL" : "https:\/\/www.google.com\/generate_204",
-    "subjectSelector" : [
-      "primary1",
-      "primary2"
-    ]
-  },
-  "outbounds" : [
-    {
-      "protocol" : "vless",
-      "settings" : {
-        "vnext" : [
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
           {
-            "address" : "141.94.204.144",
-            "port" : 8443,
-            "users" : [
+            "address": "141.94.204.144",
+            "port": 8443,
+            "users": [
               {
-                "encryption" : "none",
-                "id" : "bc6103f7-d5f3-47a9-9044-c819eae99fe2"
+                "id": "bc6103f7-d5f3-47a9-9044-c819eae99fe2",
+                "encryption": "none"
               }
             ]
           }
         ]
       },
-      "streamSettings" : {
-        "network" : "tcp",
-        "realitySettings" : {
-          "publicKey" : "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
-          "serverName" : "discordapp.com",
-          "shortId" : "6ba85179e30d4fc2",
-          "spiderX" : "\/"
-        },
-        "security" : "reality"
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "serverName": "discordapp.com",
+          "publicKey": "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
+          "shortId": "6ba85179e30d4fc2",
+          "spiderX": "/"            
+        }
       },
-      "tag" : "primary1"
+      "tag": "primary1"
     },
     {
-      "protocol" : "vless",
-      "settings" : {
-        "vnext" : [
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
           {
-            "address" : "141.94.204.143",
-            "port" : 8443,
-            "users" : [
+            "address": "141.94.204.143",
+            "port": 8443,
+            "users": [
               {
-                "encryption" : "none",
-                "id" : "7fa03a24-9456-4b71-9024-53425779823d"
+                "id": "7fa03a24-9456-4b71-9024-53425779823d",
+                "encryption": "none"
               }
             ]
           }
         ]
       },
-      "streamSettings" : {
-        "network" : "tcp",
-        "realitySettings" : {
-          "publicKey" : "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
-          "serverName" : "discordapp.com",
-          "shortId" : "6ba85179e30d4fc2",
-          "spiderX" : "\/"
-        },
-        "security" : "reality"
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "serverName": "discordapp.com",
+          "publicKey": "SbVKOEMjK0sIlbwg4akyBg5mL5KZwwB-ed4eEE7YnRc",
+          "shortId": "6ba85179e30d4fc2",
+          "spiderX": "/"             
+        }
       },
-      "tag" : "primary2"
+      "tag": "primary2"
     },
     {
-      "protocol" : "freedom",
-      "settings" : {
-
-      },
-      "tag" : "direct"
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
     },
     {
-      "protocol" : "blackhole",
-      "settings" : {
-
-      },
-      "tag" : "block"
+      "protocol": "blackhole",
+      "settings": {}, 
+      "tag": "block"
     }
   ],
-  "routing" : {
-    "balancers" : [
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "balancers": [
       {
-        "selector" : [
-          "primary1",
-          "primary2"
-        ],
-        "strategy" : {
-          "type" : "leastPing"
-        },
-        "tag" : "proxy-balancer"
+        "tag": "proxy-balancer",
+        "selector": ["primary1", "primary2"],
+        "strategy": {
+          "type": "leastPing"
+        }
       }
     ],
-    "domainStrategy" : "IPIfNonMatch",
-    "rules" : [
+    "rules": [
       {
-        "domain" : [
+        "type": "field",
+        "domain": [
           "domain:ru",
-          "geosite:category-ru"
+          "geosite:category-ru" 
         ],
-        "outboundTag" : "direct",
-        "type" : "field"
+        "outboundTag": "direct"
       },
       {
-        "ip" : [
-          "geoip:ru"
-        ],
-        "outboundTag" : "direct",
-        "type" : "field"
+        "type": "field",
+        "ip": ["geoip:ru"],
+        "outboundTag": "direct"
       },
       {
-        "domain" : [
+        "type": "field",
+        "domain": [
           "geosite:category-ads",
           "geosite:google-ads"
         ],
-        "outboundTag" : "block",
-        "type" : "field"
+        "outboundTag": "block"
       },
       {
-        "balancerTag" : "proxy-balancer",
-        "ip" : [
-          "0.0.0.0\/0",
-          "::\/0"
-        ],
-        "type" : "field"
+        "type": "field",
+        "ip": ["0.0.0.0/0", "::/0"],
+        "balancerTag": "proxy-balancer"
       }
     ]
   },
-  "remarks": "🇩🇪 CCCP - Germany"
+  "observatory": {
+    "probeURL": "https://www.google.com/generate_204",
+    "probeInterval": "5s",
+    "enableConcurrency": true,
+    "subjectSelector": ["primary1", "primary2"]
+  }
 }
 ]
